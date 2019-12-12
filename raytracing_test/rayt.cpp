@@ -505,11 +505,11 @@ namespace rayt {
 
             // Shapes
             MaterialPtr red = make_shared<Lambertian>(
-                    make_shared<ColorTexture>(vec3(0.65f*r_param, 0.05f*g_param, 0.05f*b_param)));
+                    make_shared<ColorTexture>(vec3(0.65f, 0.05f, 0.05f)));
             MaterialPtr white = make_shared<Lambertian>(
-                    make_shared<ColorTexture>(vec3(0.73f*r_param, 0.73f*g_param, 0.73f*b_param)));
+                    make_shared<ColorTexture>(vec3(0.73f, 0.73f, 0.73f)));
             MaterialPtr blue = make_shared<Lambertian>(
-                    make_shared<ColorTexture>(vec3(0.12f*r_param, 0.15f*g_param, 0.45f*b_param)));
+                    make_shared<ColorTexture>(vec3(0.12f, 0.15f, 0.45f)));
             MaterialPtr light = make_shared<DiffuseLight>(
                     make_shared<ColorTexture>(vec3(15.0f*r_param, 15.0f*g_param, 15.0f*b_param)));
 
