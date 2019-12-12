@@ -514,9 +514,9 @@ namespace rayt {
             // Shapes
 
 #ifdef RAY1
-			float r_param = 0.2826850333;
-			float g_param = 0.1646411679;
-			float b_param = 0.02534749569;
+			float r_param = 1.0;
+			float g_param = 1.0;
+			float b_param = 1.0;
 #elif defined(RAY7_1)
 			float r_param = 0.271110203;
             float g_param = 0.002383286468;
@@ -618,7 +618,7 @@ namespace rayt {
             return lerp(t, vec3(1), vec3(0.5f, 0.7f, 1.0f));
         }
 
-        void render(int threadNum, Image::rgb* image) {
+        void render(int threadNum, Vector3 image[]) {
 
             build();
 
@@ -637,7 +637,7 @@ namespace rayt {
 						c += color(r, m_world.get(), 0);
                     }
                     c /= m_samples;
-                    image[nx * (ny - j - 1) + i] = m_image->getWrite(i, (ny - j - 1), c.getX(), c.getY(), c.getZ());
+                    image[nx * (ny - j - 1) + i] = c;
                 }
             }
         }
@@ -655,7 +655,8 @@ constexpr int nx = 204;
 constexpr int ny = 204;
 constexpr int ns = 2000;
 
-rayt::Image::rgb pixels[nx * ny];
+constexpr int PIXEL_COUNT = nx * ny;
+Vector3 pixels[PIXEL_COUNT];
 
 int nxs[NUM_THREAD];
 int nys[NUM_THREAD];
@@ -683,7 +684,13 @@ int main()
 	const double time = std::chrono::duration_cast<std::chrono::duration<double>>(end - begin).count();
 	std::cout << "time " << time << "[s]" << std::endl;
 
-	stbi_write_bmp("test3.bmp", nx, ny, sizeof(rayt::Image::rgb), pixels);
+	rayt::Image image(nx, ny);
+	rayt::Image::rgb char8Pixels[PIXEL_COUNT];
+	for (int i = 0; i < PIXEL_COUNT; ++i)
+	{
+		char8Pixels[i] = image.getWrite(pixels[i]);
+	}
+	stbi_write_bmp("test3.bmp", nx, ny, sizeof(rayt::Image::rgb), char8Pixels);
 
     return 0;
 }
