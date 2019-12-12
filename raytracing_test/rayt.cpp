@@ -517,31 +517,31 @@ namespace rayt {
 			float r_param = 0.2826850333;
 			float g_param = 0.1646411679;
 			float b_param = 0.02534749569;
-#elif RAY7_1
+#elif defined(RAY7_1)
 			float r_param = 0.271110203;
             float g_param = 0.002383286468;
             float b_param = 0.0003824933941;
-#elif RAY7_2
+#elif defined(RAY7_2)
 			float r_param = 0.2826850333;
 			float g_param = 0.1646411679;
 			float b_param = 0.02534749569;
-#elif RAY7_3
+#elif defined(RAY7_3)
 			float r_param = 0.2661447962;
 			float g_param = 0.2170198516;
 			float b_param = 0.03028760031;
-#elif RAY7_4
+#elif defined(RAY7_4)
 			float r_param = 0.04673523311;
 			float g_param = 0.3052432179;
 			float b_param = 0.116319581;
-#elif RAY7_5
+#elif defined(RAY7_5)
 			float r_param = 0.00544537513;
 			float g_param = 0.1864855434;
 			float b_param = 0.2827487676;
-#elif RAY7_6
+#elif defined(RAY7_6)
 			float r_param = 0.05021897786;
 			float g_param = 0.08084457278;
 			float b_param = 0.3138387983;
-#elif RAY7_7
+#elif defined(RAY7_7)
 			float r_param = 0.07766038141;
 			float g_param = 0.04338235985;
 			float b_param = 0.2310752638;
