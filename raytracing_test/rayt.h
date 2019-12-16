@@ -175,15 +175,17 @@ namespace rayt {
 			m_pixels[index].g = static_cast<unsigned char>(c.getY() * (255.99f));
 			m_pixels[index].b = static_cast<unsigned char>(c.getZ() * (255.99f));
 		}
-		rgb getWrite(int x, int y, float r, float g, float b) {
-			vec3 c(r, g, b);
+		rgb getWrite(const vec3& color) {
+			vec3 c = color;
 			for (auto& f : m_filters) {
 				c = f->filter(c);
 			}
+			c *= 255.9;
+
 			rgb pixel;
-			pixel.r = static_cast<unsigned char>(c.getX() * (255.99f));
-			pixel.g = static_cast<unsigned char>(c.getY() * (255.99f));
-			pixel.b = static_cast<unsigned char>(c.getZ() * (255.99f));
+			pixel.r = static_cast<unsigned char>(c.getX());
+			pixel.g = static_cast<unsigned char>(c.getY());
+			pixel.b = static_cast<unsigned char>(c.getZ());
 			return pixel;
 		}
 	private:

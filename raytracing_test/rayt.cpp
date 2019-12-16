@@ -1,21 +1,13 @@
 //
 // Created by Takuto Kishioka on 2019/10/15.
 //
-
+#include <array>
+#include <string>
 #include <chrono>
 #include <omp.h>
 #include "rayt.h"
 
 using namespace std;
-
-//#define RAY1
-//#define RAY7_1
-//#define RAY7_2
-#define RAY7_3
-//#define RAY7_4
-//#define RAY7_5
-//#define RAY7_6
-//#define RAY7_7
 
 namespace rayt {
     //----------------------------------------------------------------------------
@@ -494,8 +486,8 @@ namespace rayt {
                 , m_backColor(0.2f)
                 ,m_samples(samples) { }
 
-        void build() {
-
+        void build(float r_param, float g_param, float b_param)
+		{
             m_backColor = vec3(0);
 
             // Camera
@@ -512,47 +504,12 @@ namespace rayt {
             m_camera = make_unique<Camera>(lookfrom, lookat, vup, 40, aspect);
 
             // Shapes
-
-#ifdef RAY1
-			float r_param = 0.2826850333;
-			float g_param = 0.1646411679;
-			float b_param = 0.02534749569;
-#elif defined(RAY7_1)
-			float r_param = 0.271110203;
-            float g_param = 0.002383286468;
-            float b_param = 0.0003824933941;
-#elif defined(RAY7_2)
-			float r_param = 0.2826850333;
-			float g_param = 0.1646411679;
-			float b_param = 0.02534749569;
-#elif defined(RAY7_3)
-			float r_param = 0.2661447962;
-			float g_param = 0.2170198516;
-			float b_param = 0.03028760031;
-#elif defined(RAY7_4)
-			float r_param = 0.04673523311;
-			float g_param = 0.3052432179;
-			float b_param = 0.116319581;
-#elif defined(RAY7_5)
-			float r_param = 0.00544537513;
-			float g_param = 0.1864855434;
-			float b_param = 0.2827487676;
-#elif defined(RAY7_6)
-			float r_param = 0.05021897786;
-			float g_param = 0.08084457278;
-			float b_param = 0.3138387983;
-#elif defined(RAY7_7)
-			float r_param = 0.07766038141;
-			float g_param = 0.04338235985;
-			float b_param = 0.2310752638;
-#endif
-
             MaterialPtr red = make_shared<Lambertian>(
-                    make_shared<ColorTexture>(vec3(0.65f*r_param, 0.05f*g_param, 0.05f*b_param)));
+                    make_shared<ColorTexture>(vec3(0.65f, 0.05f, 0.05f)));
             MaterialPtr white = make_shared<Lambertian>(
-                    make_shared<ColorTexture>(vec3(0.73f*r_param, 0.73f*g_param, 0.73f*b_param)));
+                    make_shared<ColorTexture>(vec3(0.73f, 0.73f, 0.73f)));
             MaterialPtr blue = make_shared<Lambertian>(
-                    make_shared<ColorTexture>(vec3(0.12f*r_param, 0.15f*g_param, 0.45f*b_param)));
+                    make_shared<ColorTexture>(vec3(0.12f, 0.15f, 0.45f)));
             MaterialPtr light = make_shared<DiffuseLight>(
                     make_shared<ColorTexture>(vec3(15.0f*r_param, 15.0f*g_param, 15.0f*b_param)));
 
@@ -618,9 +575,9 @@ namespace rayt {
             return lerp(t, vec3(1), vec3(0.5f, 0.7f, 1.0f));
         }
 
-        void render(int threadNum, Image::rgb* image) {
-
-            build();
+        void render(int threadNum, Vector3 image[], const Vector3& rgb_param)
+		{
+            build(rgb_param.getX(), rgb_param.getY(), rgb_param.getZ());
 
             int nx = m_image->width();
             int ny = m_image->height();
@@ -637,7 +594,7 @@ namespace rayt {
 						c += color(r, m_world.get(), 0);
                     }
                     c /= m_samples;
-                    image[nx * (ny - j - 1) + i] = m_image->getWrite(i, (ny - j - 1), c.getX(), c.getY(), c.getZ());
+                    image[nx * (ny - j - 1) + i] = c;
                 }
             }
         }
@@ -655,13 +612,24 @@ constexpr int nx = 204;
 constexpr int ny = 204;
 constexpr int ns = 2000;
 
-rayt::Image::rgb pixels[nx * ny];
+constexpr int PIXEL_COUNT = nx * ny;
 
 int nxs[NUM_THREAD];
 int nys[NUM_THREAD];
 int nss[NUM_THREAD];
 
-int main()
+//const array<Vector3, 1> rgb_params = { Vector3{1.0, 1.0, 1.0} };
+const array<Vector3, 7> rgb_params = { 
+	Vector3{0.271110203, 0.002383286468, 0.0003824933941},
+	Vector3{0.2826850333, 0.1646411679, 0.02534749569},
+	Vector3{0.2661447962, 0.2170198516, 0.03028760031},
+	Vector3{0.04673523311, 0.3052432179 , 0.116319581},
+	Vector3{0.00544537513, 0.1864855434, 0.2827487676},
+	Vector3{0.05021897786, 0.08084457278, 0.3138387983},
+	Vector3{0.07766038141, 0.04338235985, 0.2310752638}
+};
+
+void render(Vector3 pixels[], const Vector3& rgb_param)
 {
 	for (int i = 0; i < NUM_THREAD; i++) {
 		nxs[i] = nx;
@@ -671,20 +639,53 @@ int main()
 
 	auto begin = std::chrono::high_resolution_clock::now();
 
-	#pragma omp parallel num_threads(NUM_THREAD)
+#pragma omp parallel num_threads(NUM_THREAD)
 	{
 		int threadNum = omp_get_thread_num();
 		unique_ptr<rayt::Scene> scene(make_unique<rayt::Scene>(nxs[threadNum], nys[threadNum], nss[threadNum]));
-		scene->render(threadNum, pixels);
+		scene->render(threadNum, pixels, rgb_param);
 	}
 
 	auto end = std::chrono::high_resolution_clock::now();
 
 	const double time = std::chrono::duration_cast<std::chrono::duration<double>>(end - begin).count();
 	std::cout << "time " << time << "[s]" << std::endl;
+}
 
-	stbi_write_bmp("test3.bmp", nx, ny, sizeof(rayt::Image::rgb), pixels);
+void save(const string& file_path, Vector3 pixels[])
+{
+	rayt::Image image(nx, ny);
+	rayt::Image::rgb char8Pixels[PIXEL_COUNT];
+	for (int i = 0; i < PIXEL_COUNT; ++i)
+	{
+		char8Pixels[i] = image.getWrite(pixels[i]);
+	}
+	stbi_write_bmp(file_path.c_str(), nx, ny, sizeof(rayt::Image::rgb), char8Pixels);
+}
+
+int main()
+{
+	auto sum_pixels = make_unique<Vector3[]>(PIXEL_COUNT);
+	for (int i = 0; i < PIXEL_COUNT; ++i)
+	{
+		sum_pixels[i] = { 0,0,0 };
+	}
+
+	for (int i=0; i<rgb_params.size(); i++)
+	{
+		auto ray_pixels = make_unique<Vector3[]>(PIXEL_COUNT);
+		render(ray_pixels.get(), rgb_params[i]);
+
+		string file_path = "ray_" + to_string(i) + ".bmp";
+		save(file_path, ray_pixels.get());
+
+		for (int i = 0; i < PIXEL_COUNT; ++i)
+		{
+			sum_pixels[i] += ray_pixels[i];
+		}
+	}
+
+	save("ray_sum.bmp", sum_pixels.get());
 
     return 0;
 }
-
