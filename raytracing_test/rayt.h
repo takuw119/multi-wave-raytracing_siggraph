@@ -270,5 +270,3 @@ namespace rayt {
 	};
 
 } // namespace rayt
-
-
