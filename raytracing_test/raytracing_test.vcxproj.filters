@@ -21,7 +21,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rayt.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="inline_math.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
