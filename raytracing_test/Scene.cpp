@@ -66,3 +66,27 @@ void Scene::build(float r_param, float g_param, float b_param, float refractive_
 
 	m_world.reset(world);
 }
+
+void Scene::render(int threadNum, int numThread, Vector3 image[], const Vector3& rgb_param, const float refractive_param)
+{
+	build(rgb_param.getX(), rgb_param.getY(), rgb_param.getZ(), refractive_param);
+
+	int nx = m_image->width();
+	int ny = m_image->height();
+
+	auto begin = ny / numThread * threadNum;
+	auto end = begin + ny / numThread;
+	for (int j = begin; j < end; ++j) {
+		for (int i = 0; i < nx; ++i) {
+			vec3 c(0);
+			for (int s = 0; s < m_samples; ++s) {
+				float u = (float(i) + drand48()) / float(nx);
+				float v = (float(j) + drand48()) / float(ny);
+				Ray r = m_camera->getRay(u, v);
+				c += color(r, m_world.get(), 0);
+			}
+			c /= m_samples;
+			image[nx * (ny - j - 1) + i] = c;
+		}
+	}
+}
