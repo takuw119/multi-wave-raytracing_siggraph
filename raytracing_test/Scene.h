@@ -19,10 +19,6 @@ namespace rayt {
 
 		vec3 color(const rayt::Ray& r, const Shape* world, int depth) const;
 
-		vec3 background(const vec3& d) const {
-			return m_backColor;
-		}
-
 		vec3 backgroundSky(const vec3& d) const {
 			vec3 v = normalize(d);
 			float t = 0.5f * (v.getY() + 1.0f);

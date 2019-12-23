@@ -79,7 +79,7 @@ vec3 Scene::color(const rayt::Ray& r, const Shape* world, int depth) const {
 			return emitted;
 		}
 	}
-	return background(r.direction());
+	return this->m_backColor;
 }
 
 void Scene::render(int threadNum, int numThread, Vector3 image[], const Vector3& rgb_param, const float refractive_param)
