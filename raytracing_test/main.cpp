@@ -1,6 +1,7 @@
 //
 // Created by Takuto Kishioka on 2019/10/15.
 //
+#include <iostream>
 #include <string>
 #include <chrono>
 #include <omp.h>

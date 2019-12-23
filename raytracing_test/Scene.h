@@ -1,9 +1,6 @@
 #pragma once
-#include <iostream>
 #include <array>
 #include "inline_math.h"
-
-using namespace std;
 
 namespace rayt {
 	class Camera;
@@ -21,9 +18,9 @@ namespace rayt {
 		void render(int threadNum, int numThread, Vector3 image[], const Vector3& rgb_param, const float refractive_param);
 
 	private:
-		unique_ptr<Camera> m_camera;
-		unique_ptr<Image> m_image;
-		unique_ptr<Shape> m_world;
+		std::unique_ptr<Camera> m_camera;
+		std::unique_ptr<Image> m_image;
+		std::unique_ptr<Shape> m_world;
 		vec3 m_backColor;
 		int m_samples;
 	};
