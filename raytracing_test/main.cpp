@@ -1,8 +1,7 @@
 //
 // Created by Takuto Kishioka on 2019/10/15.
 //
-#include "rayt.h"
-
+#include <iostream>
 #include <array>
 #include <string>
 #include <chrono>
@@ -585,15 +584,15 @@ namespace rayt {
 			return lerp(t, vec3(1), vec3(0.5f, 0.7f, 1.0f));
 		}
 
-		void render(int threadNum, Vector3 image[], const Vector3& rgb_param, const float refractive_param)
+		void render(int threadNum, int numThread, Vector3 image[], const Vector3& rgb_param, const float refractive_param)
 		{
 			build(rgb_param.getX(), rgb_param.getY(), rgb_param.getZ(), refractive_param);
 
 			int nx = m_image->width();
 			int ny = m_image->height();
 
-			auto begin = ny / NUM_THREAD * threadNum;
-			auto end = begin + ny / NUM_THREAD;
+			auto begin = ny / numThread * threadNum;
+			auto end = begin + ny / numThread;
 			for (int j = begin; j < end; ++j) {
 				for (int i = 0; i < nx; ++i) {
 					vec3 c(0);
@@ -622,6 +621,7 @@ namespace rayt {
 constexpr int nx = 408;
 constexpr int ny = 408;
 constexpr int ns = 2000;
+constexpr int NUM_THREAD = 24;
 
 constexpr int PIXEL_COUNT = nx * ny;
 
@@ -667,7 +667,7 @@ void render(Vector3 pixels[], const Vector3& rgb_param, const float refractive_p
 		int threadNum = omp_get_thread_num();
 		unique_ptr<rayt::Scene> scene(make_unique<rayt::Scene>(nxs[threadNum], nys[threadNum], nss[threadNum]));
 
-		scene->render(threadNum, pixels, rgb_param, refractive_params);
+		scene->render(threadNum, NUM_THREAD, pixels, rgb_param, refractive_params);
 
 	}
 
