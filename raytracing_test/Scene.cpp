@@ -67,6 +67,21 @@ void Scene::build(float r_param, float g_param, float b_param, float refractive_
 	m_world.reset(world);
 }
 
+vec3 Scene::color(const rayt::Ray& r, const Shape* world, int depth) const {
+	HitRec hrec;
+	if (world->hit(r, 0.001, FLT_MAX, hrec)) {
+		vec3 emitted = hrec.mat->emitted(r, hrec);
+		ScatterRec srec;
+		if (depth < MAX_DEPTH && hrec.mat->scatter(r, hrec, srec)) {
+			return emitted + mulPerElem(srec.albedo, color(srec.ray, world, depth + 1));
+		}
+		else {
+			return emitted;
+		}
+	}
+	return background(r.direction());
+}
+
 void Scene::render(int threadNum, int numThread, Vector3 image[], const Vector3& rgb_param, const float refractive_param)
 {
 	build(rgb_param.getX(), rgb_param.getY(), rgb_param.getZ(), refractive_param);
