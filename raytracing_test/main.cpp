@@ -26,7 +26,6 @@ int nys[NUM_THREAD];
 int nss[NUM_THREAD];
 
 //const array<Vector3, 1> rgb_params = { Vector3{1.0, 1.0, 1.0} };
-
 const array<Vector3, 7> rgb_params = {
 	Vector3{0.271110203, 0.002383286468, 0.0003824933941},
 	Vector3{0.2826850333, 0.1646411679, 0.02534749569},
@@ -37,7 +36,7 @@ const array<Vector3, 7> rgb_params = {
 	Vector3{0.07766038141, 0.04338235985, 0.2310752638}
 };
 
-
+//const array<float, 1> refractive_params = { 2.01 };
 const array<float, 7> refractive_params = {
 	1.98,
 	1.99,
