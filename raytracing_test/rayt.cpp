@@ -481,6 +481,7 @@ namespace rayt {
 
 	//----------------------------------------------------------------------------
 
+
 	class Scene {
 	public:
 		Scene(int width, int height, int samples)
@@ -502,6 +503,7 @@ namespace rayt {
  //           vec3 lookfrom( 180, 18, 60);
  //           vec3 lookat(180, 18, 80);
  //           vec3 vup(0, 1, 0);
+
 			float aspect = float(m_image->width()) / float(m_image->height());
 			m_camera = make_unique<Camera>(lookfrom, lookat, vup, 40, aspect);
 
@@ -612,6 +614,7 @@ namespace rayt {
 		vec3 m_backColor;
 		int m_samples;
 	};
+
 }// namespace rayt
 
 constexpr int nx = 408;
@@ -625,6 +628,7 @@ int nys[NUM_THREAD];
 int nss[NUM_THREAD];
 
 //const array<Vector3, 1> rgb_params = { Vector3{1.0, 1.0, 1.0} };
+
 const array<Vector3, 7> rgb_params = {
 	Vector3{0.271110203, 0.002383286468, 0.0003824933941},
 	Vector3{0.2826850333, 0.1646411679, 0.02534749569},
@@ -636,6 +640,7 @@ const array<Vector3, 7> rgb_params = {
 };
 
 //const array<float, 1> refractive_params = { 2.01 };
+
 const array<float, 7> refractive_params = {
 	1.98,
 	1.99,
@@ -646,6 +651,7 @@ const array<float, 7> refractive_params = {
 };
 
 void render(Vector3 pixels[], const Vector3& rgb_param, const float refractive_params)
+
 {
 	for (int i = 0; i < NUM_THREAD; i++) {
 		nxs[i] = nx;
@@ -659,7 +665,9 @@ void render(Vector3 pixels[], const Vector3& rgb_param, const float refractive_p
 	{
 		int threadNum = omp_get_thread_num();
 		unique_ptr<rayt::Scene> scene(make_unique<rayt::Scene>(nxs[threadNum], nys[threadNum], nss[threadNum]));
+
 		scene->render(threadNum, pixels, rgb_param, refractive_params);
+
 	}
 
 	auto end = std::chrono::high_resolution_clock::now();
