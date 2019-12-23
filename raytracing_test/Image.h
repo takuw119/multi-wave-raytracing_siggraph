@@ -1,11 +1,5 @@
 #pragma once
 #include <memory> // To use "unique_ptr"
-
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image.h"
-#include "stb_image_write.h"
-
 #include "inline_math.h"
 
 using namespace std;
