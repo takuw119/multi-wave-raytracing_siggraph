@@ -139,6 +139,7 @@
     <ClCompile Include="rayt.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="inline_math.h" />
     <ClInclude Include="Ray.h" />

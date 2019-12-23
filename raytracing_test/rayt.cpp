@@ -9,6 +9,7 @@
 #include <omp.h>
 
 #include "Image.h"
+#include "Camera.h"
 
 using namespace std;
 
