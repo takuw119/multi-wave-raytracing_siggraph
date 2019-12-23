@@ -315,7 +315,7 @@ namespace rayt {
 
 			ShapeList* l = new ShapeList();
 			l->add(make_shared<Rect>(
-				p0.getX(), p1.getX(), p0.getY(), p1.getY(), p1.getZ(), Rect::kXY, m));
+				p0.getX(), p1.getX(), p0.getY(), p1.getY(), p1.getZ(), Rect::kXY, m)); 
 			l->add(make_shared<FlipNormals>(make_shared<Rect>(
 				p0.getX(), p1.getX(), p0.getY(), p1.getY(), p0.getZ(), Rect::kXY, m)));
 			l->add(make_shared<Rect>(
@@ -426,7 +426,7 @@ namespace rayt {
 			float x = r.origin()[xi] + t * r.direction()[xi];
 			float y = r.origin()[yi] + t * r.direction()[yi];
 
-			if ((y - m_y0) > sqrt(3)* (x - m_x0) || (y - m_y0) > -sqrt(3) * (x - m_x0) + 2 * (m_l + m_y0) || y < m_y0) {
+			if ((y - m_y0) > sqrt(3)* (x - m_x0) || (y - m_y0) > -sqrt(3) * (x - m_x0) + 2 * (sqrt(3)*m_l/2 + m_y0) || y < m_y0) {
 				return false;
 			}
 
@@ -448,7 +448,7 @@ namespace rayt {
 
 	//----------------------------------------------------------------------------
 
-	/*class Prism : public Shape {
+	class Prism : public Shape {
 	public:
 		Prism(){}
 		Prism(const vec3& p0, float l,float d, const MaterialPtr& m)
@@ -456,18 +456,18 @@ namespace rayt {
 			, m_l(l)
 			, m_d(d)
 			, m_list(make_unique<ShapeList>()) {
-			ShapeList* 1 = new ShapeList();
-			1->add(make_shared<Triangle>(
+			ShapeList* list = new ShapeList();
+			list->add(make_shared<Triangle>(
 				p0.getX(), p0.getY(), m_l, p0.getZ(), Triangle::kXY, m));
-			1->add(make_shared<Triangle>(
-				p0.getX(), p0.getY(), m_l, p0.getZ(), Triangle::kXY, m));
-			1->add(make_shared<Rect>(
-				p0.getX(), p0.getY(), m_l, p0.getZ(), Rect::kXY, m));
-			1->add(make_shared<Rect>(
-				p0.getX(), p0.getY(), m_l, p0.getZ(), Rect::kXY, m));
-			1->add(make_shared<Rect>(
-				p0.getX(), p0.getY(), m_l, p0.getZ(), Rect::kXY, m));
-			m_list.reset(1);
+			list->add(make_shared<FlipNormals>(make_shared<Triangle>(
+				p0.getX(), p0.getY(), m_l, p0.getZ() + m_d, Triangle::kXY, m)));
+			list->add(make_shared<FlipNormals>(make_shared<Rect>(
+				p0.getX(), p0.getX() + m_l, p0.getZ(), p0.getZ() + m_d, p0.getY(), Rect::kXZ, m)));
+			list->add(make_shared<Rotate>(make_shared<Rect>(
+				p0.getY(), p0.getY() + m_l, p0.getZ(), p0.getZ() + m_d, p0.getX(), Rect::kYZ, m), vec3(0, 0, 1), -30));
+			list->add(make_shared<FlipNormals>(make_shared<Rotate>(make_shared<Rect>(
+				p0.getY(), p0.getY() + m_l, p0.getZ(), p0.getZ() + m_d, p0.getX()+m_l, Rect::kYZ, m), vec3(0, 0, 1), 30)));
+			m_list.reset(list);
 		}
 		virtual bool hit(const Ray& r, float t0, float t1, HitRec& hrec) const override {
 			return m_list->hit(r, t0, t1, hrec);
@@ -477,7 +477,7 @@ namespace rayt {
 		float m_l, m_d;
 		unique_ptr<ShapeList> m_list;
 
-	};*/
+	};
 
 	//----------------------------------------------------------------------------
 
@@ -537,10 +537,12 @@ namespace rayt {
 			/*world->add(make_shared<Triangle>(
 				40, 0, 380, 330, Triangle::kXY, red));
 			*/
+			world->add(make_shared<Prism>(
+				vec3(70, 0, 130),280, 50, make_shared<Dielectric>(refractive_param)/*red*/));
 
-			world->add(make_shared<Sphere>(
+			/*world->add(make_shared<Sphere>(
 					vec3(200, 125, 200), 125,
-					make_shared<Dielectric>(refractive_param)));
+					make_shared<Dielectric>(refractive_param)));*/
 
 					/*world->add(
 							make_shared<Translate>(
@@ -548,7 +550,8 @@ namespace rayt {
 													make_shared<Box>(vec3(130, 0, 65), vec3(295,165,230), make_shared<Dielectric>(2.01f)),
 											vec3(0,1,0),-90),
 									vec3(130, 0, 65)));*/
-									//world->add(make_shared<Box>(vec3(130, 0, 65), vec3(295, 165, 230), make_shared<Dielectric>(2.01f)));
+									/*world->add(make_shared<Box>(vec3(130, 0, 65), vec3(295, 165, 230), make_shared<Dielectric>(2.01f)));*/
+
 
 			m_world.reset(world);
 		}
@@ -632,6 +635,7 @@ const array<Vector3, 7> rgb_params = {
 	Vector3{0.07766038141, 0.04338235985, 0.2310752638}
 };
 
+//const array<float, 1> refractive_params = { 2.01 };
 const array<float, 7> refractive_params = {
 	1.98,
 	1.99,
@@ -688,7 +692,7 @@ int main()
 		auto ray_pixels = make_unique<Vector3[]>(PIXEL_COUNT);
 		render(ray_pixels.get(), rgb_params[i], refractive_params[i]);
 
-		string file_path = "ray_" + to_string(i) + ".bmp";
+		string file_path = "test_" + to_string(i) + ".bmp";
 		save(file_path, ray_pixels.get());
 
 		for (int i = 0; i < PIXEL_COUNT; ++i)
@@ -697,7 +701,7 @@ int main()
 		}
 	}
 
-	save("ray_sum.bmp", sum_pixels.get());
+	save("test.bmp", sum_pixels.get());
 
 	return 0;
 }
