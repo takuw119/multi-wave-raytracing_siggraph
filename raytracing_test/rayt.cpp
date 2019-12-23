@@ -10,6 +10,7 @@
 
 #include "Image.h"
 #include "Camera.h"
+#include "Texture.h"
 
 using namespace std;
 

@@ -144,6 +144,7 @@
     <ClInclude Include="inline_math.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="rayt.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
