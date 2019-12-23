@@ -1,6 +1,7 @@
 #pragma once
 #include "Ray.h"
 #include "inline_math.h"
+#include "Image.h"
 #include "Texture.h"
 
 namespace rayt {

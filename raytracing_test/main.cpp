@@ -11,6 +11,7 @@
 #include "stb_image_write.h"
 
 #include "Scene.h"
+#include "Image.h"
 
 constexpr int nx = 408;
 constexpr int ny = 408;

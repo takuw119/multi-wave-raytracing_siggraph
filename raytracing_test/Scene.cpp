@@ -1,5 +1,16 @@
 #include "Scene.h"
+#include "Image.h"
+#include "Camera.h"
+#include "Shape.h"
+
 using namespace rayt;
+
+Scene::Scene(int width, int height, int samples)
+	: m_image(make_unique<Image>(width, height))
+	, m_backColor(0.2f)
+	, m_samples(samples) { }
+
+Scene::~Scene() = default;
 
 void Scene::build(float r_param, float g_param, float b_param, float refractive_param)
 {
