@@ -1,4 +1,8 @@
 #pragma once
+#include "vectormath/include/vectormath/scalar/cpp/vectormath_aos.h"
+using namespace Vectormath::Aos;
+typedef Vector3 vec3;
+typedef Vector3 col3;
 
 #define PI 3.14159265359f
 #define PI2 6.28318530718f

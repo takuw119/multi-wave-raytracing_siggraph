@@ -1,11 +1,14 @@
 //
 // Created by Takuto Kishioka on 2019/10/15.
 //
+#include "rayt.h"
+
 #include <array>
 #include <string>
 #include <chrono>
 #include <omp.h>
-#include "rayt.h"
+
+#include "Image.h"
 
 using namespace std;
 
