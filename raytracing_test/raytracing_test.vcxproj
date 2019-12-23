@@ -144,6 +144,7 @@
     <ClInclude Include="inline_math.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
