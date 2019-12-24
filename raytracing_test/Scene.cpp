@@ -63,9 +63,12 @@ void Scene::build(float r_param, float g_param, float b_param, float refractive_
 		40, 0, 380, 330, Triangle::kXY, red));
 	*/
 
-	world->add(make_shared<Sphere>(
-		vec3(200, 125, 200), 125,
-		make_shared<Dielectric>(refractive_param)));
+	world->add(make_shared<Prism>(
+		vec3(70, 0, 130), 280, 50, make_shared<Dielectric>(refractive_param)/*red*/));
+
+	/*world->add(make_shared<Sphere>(
+			vec3(200, 125, 200), 125,
+			make_shared<Dielectric>(refractive_param)));*/
 
 	/*world->add(
 			make_shared<Translate>(
