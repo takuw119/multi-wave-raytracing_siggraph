@@ -74,12 +74,12 @@ void render(Vector3 pixels[], const Vector3& rgb_param, const float refractive_p
 void save(const string& file_path, Vector3 pixels[])
 {
 	rayt::Image image(nx, ny);
-	rayt::Image::rgb char8Pixels[PIXEL_COUNT];
+	auto rgb8uPixels = make_unique<rayt::Image::rgb[]>(PIXEL_COUNT);
 	for (int i = 0; i < PIXEL_COUNT; ++i)
 	{
-		char8Pixels[i] = image.getWrite(pixels[i]);
+		rgb8uPixels[i] = image.getWrite(pixels[i]);
 	}
-	stbi_write_bmp(file_path.c_str(), nx, ny, sizeof(rayt::Image::rgb), char8Pixels);
+	stbi_write_bmp(file_path.c_str(), nx, ny, sizeof(rayt::Image::rgb), rgb8uPixels.get());
 }
 
 int main()
