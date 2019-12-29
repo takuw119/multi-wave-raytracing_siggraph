@@ -40,6 +40,7 @@ const array<Vector3, 7> rgb_params = {
 const array<float, 7> refractive_params = {
 	1.98,
 	1.99,
+	1.99,
 	2.01,
 	2.04,
 	2.06,
